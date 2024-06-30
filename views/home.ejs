@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trend Scop</title>
+    <link rel="stylesheet" href="/styles/output.css" />
+  </head>
+  <body>
+    <header>
+      <nav
+        class="max-w-7xl m-auto h-16 flex justify-between items-center px-2.5"
+      >
+        <button class="text-2xl md:text-3xl font-semibold -tracking-wide">
+          Trend Scop
+        </button>
+        <!-- MENU ICON -->
+        <img
+          src="/icons/menu_icon.svg"
+          alt="menu icon"
+          height="30"
+          width="30"
+          decoding="async"
+          loading="lazy"
+          class="sm:hidden"
+          onclick="viewMobileMenu()"
+          id="menu-btn"
+        />
+        <!-- DESKTOP MENU -->
+        <div class="hidden sm:flex justify-around w-1/2 lg:w-1/3">
+          <button class="hover:text-gray-500 transition-all ease-in-out">
+            Home
+          </button>
+          <button class="hover:text-gray-500 transition-all ease-in-out">
+            About
+          </button>
+          <button class="hover:text-gray-500 transition-all ease-in-out">
+            Blogs
+          </button>
+          <button class="hover:text-gray-500 transition-all ease-in-out">
+            Contact
+          </button>
+        </div>
+      </nav>
+    </header>
+    <!-- MOBILE MENU -->
+    <div
+      id="mobile-menu"
+      class="fixed hidden flex-col justify-center items-center gap-14 top-16 left-0 bg-black h-[calc(100vh-64px)] w-full"
+    >
+      <button class="hover:text-gray-500 transition-all ease-in-out text-white">
+        Home
+      </button>
+      <button class="hover:text-gray-500 transition-all ease-in-out text-white">
+        About
+      </button>
+      <button class="hover:text-gray-500 transition-all ease-in-out text-white">
+        Blogs
+      </button>
+      <button class="hover:text-gray-500 transition-all ease-in-out text-white">
+        Contact
+      </button>
+    </div>
+    <main class="max-w-7xl m-auto px-2.5">
+      <section
+        class="h-[calc(100vh-64px)] flex flex-col gap-6 items-center justify-center"
+      >
+        <h1 class="text-4xl font-extrabold tracking-tighter">
+          Exploring the Future of AI, ML, and LLM
+        </h1>
+        <p class="text-lg text-gray-600">
+          Your go-to source for the latest insights, trends, and breakthroughs
+          in artificial intelligence, machine learning, and large language
+          models.
+        </p>
+        <form
+          method="POST"
+          action="/"
+          class="flex flex-nowrap sm:w-2/4 p-1.5 border-[1px] border-gray-400 rounded-md"
+          id="subscribeForm"
+        >
+          <input
+            type="email"
+            placeholder="Enter your email"
+            required
+            name="email"
+            class="w-2/3 focus:outline-none p-2 sm:p-3"
+          />
+          <button class="w-1/3 text-white bg-black p-3 sm:p-3.5 rounded-md">
+            Subscribe
+          </button>
+        </form>
+        <div id="message" class="hidden bg-red-500 text-white p-2"></div>
+      </section>
+    </main>
+    <footer class="max-w-7xl m-auto">footer</footer>
+
+    <script defer src="/js/script.js"></script>
+  </body>
+</html>
