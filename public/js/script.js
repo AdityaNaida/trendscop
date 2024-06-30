@@ -11,6 +11,7 @@ function viewMobileMenu() {
   }
 }
 
+//Submit Subscribe button
 const form = document.getElementById("subscribeForm");
 form.addEventListener("submit", (event) => {
   // event.preventDefault(); // Prevent default form submission
@@ -41,4 +42,17 @@ function showMessage(message) {
   setTimeout(() => {
     messageDiv.style.display = "none";
   }, 500); // Show message for 500ms
+}
+
+//view blogs
+
+function viewBlogs() {
+  const blogs = document.querySelector(".blogs");
+  blogs.scrollIntoView({ behavior: "smooth" });
+}
+
+function viewBlogsMobile() {
+  const blogs = document.querySelector(".blogs");
+  blogs.scrollIntoView({ behavior: "smooth" });
+  viewMobileMenu();
 }
