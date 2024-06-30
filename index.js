@@ -47,7 +47,12 @@ try {
 }
 
 app.get("/", (req, res) => {
-  res.render("home.ejs");
+  const q = "SELECT * FROM blog_articles";
+  connection.query(q, (err, result) => {
+    if (err) throw err;
+    const data = result;
+    res.render("home.ejs", { data });
+  });
 });
 
 app.post("/", (req, res) => {
@@ -62,7 +67,7 @@ app.post("/", (req, res) => {
     }
 
     if (result.length > 0) {
-      res.json({ message: "Email already exists" });
+      res.send("Email already exists");
     } else {
       const insertionQuery =
         "INSERT INTO subscriber (subscribed_users) VALUES (?)";
@@ -72,7 +77,7 @@ app.post("/", (req, res) => {
           res.status(500).json({ message: "Internal server error" });
           return;
         }
-        res.json({ message: "Subscribed" });
+        res.send("Subscribed");
       });
     }
   });

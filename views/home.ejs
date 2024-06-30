@@ -5,11 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Trend Scop</title>
     <link rel="stylesheet" href="/styles/output.css" />
+    <style>
+      .custom-clamp {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        text-overflow: ellipsis;
+      }
+    </style>
   </head>
   <body>
-    <header>
+    <header class="sticky top-0 left-0 z-999 sm:relative bg-white">
       <nav
-        class="max-w-7xl m-auto h-16 flex justify-between items-center px-2.5"
+        class="max-w-7xl m-auto h-16 flex justify-between items-center px-2.5 bg-white"
       >
         <button class="text-2xl md:text-3xl font-semibold -tracking-wide">
           Trend Scop
@@ -46,7 +54,7 @@
     <!-- MOBILE MENU -->
     <div
       id="mobile-menu"
-      class="fixed hidden flex-col justify-center items-center gap-14 top-16 left-0 bg-black h-[calc(100vh-64px)] w-full"
+      class="fixed hidden flex-col justify-center items-center gap-14 top-16 left-0 bg-black h-[calc(100vh-64px)] w-full z-10"
     >
       <button class="hover:text-gray-500 transition-all ease-in-out text-white">
         Home
@@ -91,6 +99,55 @@
           </button>
         </form>
         <div id="message" class="hidden bg-red-500 text-white p-2"></div>
+      </section>
+      <section class="">
+        <h2 class="text-2xl font-bold">All blog posts</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 py-4">
+          <% for(user of data) {%>
+          <div class="">
+            <div class="h-56 w-full">
+              <img
+                src="<%= user.image_url %>"
+                alt=""
+                class="h-56 w-full rounded-md"
+              />
+            </div>
+            <div class="py-2">
+              <p class="text-sm font-semibold">
+                <span><%= user.author %></span>
+                &#8226;
+                <span><%= user.dated %></span>
+              </p>
+              <div class="flex justify-between mt-2">
+                <h3 class="font-extrabold w-[90%] text-lg">
+                  <%= user.heading %>
+                </h3>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  height="30"
+                  width="30"
+                >
+                  <path
+                    d="M16.0037 9.41421L7.39712 18.0208L5.98291 16.6066L14.5895 8H7.00373V6H18.0037V17H16.0037V9.41421Z"
+                  ></path>
+                </svg>
+              </div>
+              <p
+                class="text-gray-500 overflow-hidden block max-h-16 text-ellipsis whitespace-normal custom-clamp"
+              >
+                <%= user.article %>
+              </p>
+              <form action="/blog/<%=user.id%>" method="POST">
+                <button class="mt-2 bg-black text-white px-3 py-1.5 rounded-md">
+                  Read More
+                </button>
+              </form>
+            </div>
+          </div>
+          <% }%>
+        </div>
       </section>
     </main>
     <footer class="max-w-7xl m-auto">footer</footer>
