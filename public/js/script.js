@@ -1,7 +1,7 @@
 //Function for viewing the mobile menu
+const menu = document.querySelector("#mobile-menu");
+const menuIcon = document.querySelector("#menu-btn");
 function viewMobileMenu() {
-  const menu = document.querySelector("#mobile-menu");
-  const menuIcon = document.querySelector("#menu-btn");
   menu.classList.toggle("flex");
   menu.classList.toggle("hidden");
   if (menu.classList.contains("flex")) {
@@ -46,13 +46,18 @@ function showMessage(message) {
 
 //view blogs
 
+const blogs = document.querySelector(".blogs");
+const contact = document.querySelector(".contact");
 function viewBlogs() {
-  const blogs = document.querySelector(".blogs");
   blogs.scrollIntoView({ behavior: "smooth" });
+  if (menu.classList.contains("flex")) {
+    viewMobileMenu();
+  }
 }
 
-function viewBlogsMobile() {
-  const blogs = document.querySelector(".blogs");
-  blogs.scrollIntoView({ behavior: "smooth" });
-  viewMobileMenu();
+function viewContact() {
+  contact.scrollIntoView({ behavior: "smooth" });
+  if (menu.classList.contains("flex")) {
+    viewMobileMenu();
+  }
 }

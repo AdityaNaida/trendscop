@@ -48,7 +48,10 @@
           >
             Blogs
           </button>
-          <button class="hover:text-gray-500 transition-all ease-in-out">
+          <button
+            class="hover:text-gray-500 transition-all ease-in-out"
+            onclick="viewContact()"
+          >
             Contact
           </button>
         </div>
@@ -67,11 +70,14 @@
       </button>
       <button
         class="hover:text-gray-500 transition-all ease-in-out text-white"
-        onclick="viewBlogsMobile()"
+        onclick="viewBlogs()"
       >
         Blogs
       </button>
-      <button class="hover:text-gray-500 transition-all ease-in-out text-white">
+      <button
+        class="hover:text-gray-500 transition-all ease-in-out text-white"
+        onclick="viewContact()"
+      >
         Contact
       </button>
     </div>
@@ -161,7 +167,7 @@
           <% }%>
         </div>
       </section>
-      <section class="py-4">
+      <section class="py-4 contact">
         <h2 class="text-4xl font-bold tracking-tighter text-center">
           Contact our team
         </h2>
@@ -169,11 +175,11 @@
           Got any questions about the blog? We're here to help.Chat to our
           friendly team 24/7 and get onboard in less than 5 minutes.
         </p>
-        <div class="pt-10 pb-5 w-full flex flex-wrap sm:flex-nowrap gap-3">
+        <div class="pt-10 pb-5 w-full flex flex-wrap sm:flex-nowrap gap-10">
           <form
             action=""
             method="POST"
-            class="w-full sm:w-2/3 flex flex-col gap-5"
+            class="w-full sm:w-1/2 flex flex-col gap-5"
           >
             <div class="grid grid-cols-2 gap-6">
               <div class="flex flex-col gap-2">
@@ -200,20 +206,104 @@
               </div>
             </div>
             <div class="flex flex-col gap-2 w-full">
-              <label for="last-name">Last Name</label>
+              <label for="user-email">Email</label>
               <input
-                type="text"
-                id="last-name"
-                name="last-name"
+                type="email"
+                id="user-email"
+                name="user-email"
                 required
-                placeholder="Last name"
+                placeholder="you@company.com"
                 class="p-2 border-[1px] border-gray-600 rounded-md"
               />
             </div>
+            <div class="flex flex-col gap-2 w-full">
+              <label for="user-number">Phone number</label>
+              <input
+                type="tel"
+                id="user-number"
+                name="user-number"
+                minlength="10"
+                maxlength="10"
+                required
+                placeholder="1234567890"
+                class="p-2 border-[1px] border-gray-600 rounded-md"
+              />
+            </div>
+            <div class="flex flex-col gap-2 w-full">
+              <label for="user-message">Message</label>
+              <textarea
+                name="user-message"
+                id="user-message"
+                placeholder="Leave us a message..."
+                class="p-2 border-[1px] border-gray-600 rounded-md"
+              ></textarea>
+            </div>
+            <button class="bg-black text-white p-4 rounded-md">
+              Send message
+            </button>
           </form>
-          <div class="w-full sm:w-1/3">
-            <h3 class="text-lg font-bold">Chat with us</h3>
-            <p></p>
+          <div class="w-full sm:w-1/2">
+            <h3 class="text-xl font-bold mb-3">Chat with us</h3>
+            <p class="text-gray-500">
+              Speak to our friendly team via live chat.
+            </p>
+            <div class="my-4 flex flex-col gap-2">
+              <a
+                href="https://wa.me/8240590169"
+                class="flex items-center gap-2 font-semibold text-[15px] underline"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="28"
+                  width="28"
+                  viewBox="0 -960 960 960"
+                  fill="#000000"
+                >
+                  <path
+                    d="M289.23-310.77q-13.08 0-21.92-8.84-8.85-8.85-8.85-21.93v-40h470l25.39 25.39V-720h40q13.07 0 21.92 8.85 8.85 8.84 8.85 21.92v501.54L701.54-310.77H289.23Zm-153.85-27.69v-470.77q0-13.08 8.85-21.92 8.85-8.85 21.92-8.85h476.93q13.07 0 21.92 8.85 8.85 8.84 8.85 21.92v316.92q0 13.08-8.85 21.93-8.85 8.84-21.92 8.84H258.46L135.38-338.46Zm498.47-163.08V-800H175.38v353.85l55.39-55.39h403.08Zm-458.47 0V-800v298.46Z"
+                  />
+                </svg>
+                Start a live chat</a
+              >
+              <a
+                href="mailto:adityanaida@gmail.com"
+                class="flex items-center gap-2 font-semibold text-[15px] underline"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="24px"
+                  viewBox="0 -960 960 960"
+                  width="24px"
+                  fill="#000000"
+                >
+                  <path
+                    d="M160-220v-520l616.92 260L160-220Zm40-60 474-200-474-200v155.38L393.85-480 200-435.38V-280Zm0 0v-400 400Z"
+                  />
+                </svg>
+                Shoot us an email
+              </a>
+            </div>
+            <h3 class="text-xl font-bold mb-3">Call us</h3>
+            <p class="text-gray-500">Call our team Mon-Fri from 8am to 5pm</p>
+            <div class="my-4">
+              <a
+                href="https://wa.me/8240590169"
+                class="flex items-center gap-2 font-semibold text-[15px] underline"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="24px"
+                  viewBox="0 -960 960 960"
+                  width="24px"
+                  fill="#000000"
+                >
+                  <path
+                    d="M516.92-516.92v-200h40v131.69l218.46-218.46 28.31 28.31-218.46 218.46h131.69v40h-200ZM757.23-160q-101.15 0-207.38-50.65-106.23-50.66-197.39-142.2-91.15-91.53-141.81-197.38Q160-656.08 160-757.23q0-18.33 12-30.55Q184-800 202-800h98.92q16.31 0 28.46 10.27 12.16 10.27 16.47 26.35L365.69-668q2.77 16.77-1 29.31t-13.31 20.54l-87.76 81.84q24.61 44.69 54.42 83.04 29.81 38.35 63.58 72.65 34.84 34.85 75 64.81 40.15 29.96 88.15 56.58l85.54-87.08q9.77-10.54 21.96-13.88 12.19-3.35 26.96-1.35l84.15 17.23q16.31 4 26.47 16.43Q800-315.46 800-299.38V-202q0 18-12.22 30t-30.55 12ZM244.85-573.85l76.77-70.61q3.84-3.08 5-8.46 1.15-5.39-.39-10l-17.77-84.77q-1.54-6.16-5.38-9.23-3.85-3.08-10-3.08H211q-4.62 0-7.69 3.08-3.08 3.07-3.08 7.69 1.15 41 12.85 85.61 11.69 44.62 31.77 89.77Zm338 333.39q40.53 20.08 86.42 29.69 45.88 9.62 79.96 10.31 4.62 0 7.69-3.08 3.08-3.08 3.08-7.69v-80.31q0-6.15-3.08-10-3.07-3.84-9.23-5.38l-74-15.16q-4.61-1.54-8.07-.38-3.47 1.15-7.31 5l-75.46 77Zm-338-333.39Zm338 333.39Z"
+                  />
+                </svg>
+                +91 82405 90169</a
+              >
+            </div>
           </div>
         </div>
       </section>
