@@ -45,9 +45,17 @@ function showMessage(message) {
 }
 
 //view blogs
-
+const hero = document.querySelector(".hero");
 const blogs = document.querySelector(".blogs");
 const contact = document.querySelector(".contact");
+
+function viewHero() {
+  hero.scrollIntoView({ behavior: "smooth" });
+  if (menu.classList.contains("flex")) {
+    viewMobileMenu();
+  }
+}
+
 function viewBlogs() {
   blogs.scrollIntoView({ behavior: "smooth" });
   if (menu.classList.contains("flex")) {

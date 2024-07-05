@@ -2,7 +2,7 @@
 const mysql = require("mysql2");
 //require method override
 const methodOverride = require("method-override");
-// for enviorment variables
+// for environment variables
 const dotenv = require("dotenv");
 const express = require("express");
 const app = express();
@@ -13,17 +13,20 @@ const path = require("path");
 const { v4: uuidv4 } = require("uuid");
 //bodyparser
 const bodyParser = require("body-parser");
+// marked down the blog article
 
-//Loading enviorment variables from .env file
+const { marked } = require('marked');
+
+//Loading environment variables from .env file
 dotenv.config();
 
-//set the view egine to embedded javascript template
+//set the view engine to embedded javascript template
 app.set("view engine", "ejs");
-//setting the frotned view
+//setting the frontend view
 app.set("views", path.join(__dirname, "/views"));
 //static file location
 app.use(express.static("public"));
-//for overidding html form methods
+//for overriding html form methods
 app.use(methodOverride("_method"));
 //decode the req body from the url
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -43,7 +46,7 @@ try {
   });
 } catch (err) {
   console.log(err);
-  console.log("Some error occured while connecrting to the database!");
+  console.log("Some error occurred while connecting to the database!");
 }
 
 app.get("/", (req, res) => {
@@ -83,18 +86,22 @@ app.post("/", (req, res) => {
   });
 });
 
+app.get("/blog/:id", (req, res) => {
+  const { id } = req.params;
+  const p = `SELECT * FROM blog_articles WHERE id = ${id}`;
+  try {
+    connection.query(p, (err, result) => {
+      if (err) throw err;
+      const data = result[0];
+      data.content = marked.parse(data.content);
+      res.render("post.ejs", { data: data });
+    });
+  } catch (err) {
+    console.log(err);
+    res.send("Some error occurred in fetching from the database");
+  }
+});
+
 app.listen(port, () => {
   console.log(`Listening at ${port}`);
 });
-
-// try {
-//   connection.query("SHOW TABLES", (err, result) => {
-//     if (err) throw err;
-//     console.log(result);
-//   });
-// } catch (err) {
-//   console.log(err);
-//   console.log("some error occured here");
-// }
-
-// connection.end();

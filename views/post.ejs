@@ -1,11 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
-</head>
-<body>
-    
-</body>
+<%- include("header_post.ejs") %>
+
+ <main class="max-w-7xl m-auto px-2.5">
+ <section class="mt-10">
+    <h1 class="font-extrabold text-4xl text-gray-800 mb-4">
+        <%= data.heading %>
+    </h1>
+    <div class="flex items-center gap-2">
+        <img src="/icons/user.webp" alt="author image" class="h-8 w-8 opacity-50" height="25" width="25" decoding="async" loading="lazy">
+        <p class="font-semibold text-lg mr-3"><%= data.author%></p>
+        <p class="text-gray-500 text-sm"><%= data.dated %></p>
+    </div>
+    <div class="my-4">
+        <img src="<%= data.image_url %>" alt="<%= data.image_alt %>" height="100" width="200" decoding="async" loading="lazy" class="block m-auto h-auto w-full sm:w-1/2 rounded-md">
+    </div>
+    <div class="my-7 content">
+        <%- data.content%>
+    </div>
+
+ </section>
+ </main>
+  </body>
 </html>
