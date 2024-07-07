@@ -88,9 +88,9 @@ app.post("/", (req, res) => {
 
 app.get("/blog/:id", (req, res) => {
   const { id } = req.params;
-  const p = `SELECT * FROM blog_articles WHERE id = ${id}`;
+  const p = `SELECT * FROM blog_articles WHERE id = ?`;
   try {
-    connection.query(p, (err, result) => {
+    connection.query(p, [id], (err, result) => {
       if (err) throw err;
       const data = result[0];
       data.content = marked.parse(data.content);
@@ -112,7 +112,6 @@ app.patch("/blog/:id", (req, res) => {
       res.status(500).json({ message: "Internal server error" });
       return;
     }
-    console.log(result);
     res.redirect(`/blog/${id}`);
   })
 })
@@ -154,7 +153,6 @@ app.post("/submitted", (req, res) => {
       res.send(500).json({ message: "Internal server error" });
       return;
     }
-    console.log(result);
    res.render("submitted.ejs")
   })
 })
@@ -178,7 +176,7 @@ app.get("/blog/:id/verify", (req, res) => {
 })
 
 app.post("/blog/:id/edit", (req, res) => {
-  const { postId , dated, author } = req.body;
+  const { postId , author } = req.body;
   const q = `SELECT * FROM  blog_articles WHERE id = ?`;
   try {
     connection.query(q, postId, (err, result) => {
@@ -188,18 +186,40 @@ app.post("/blog/:id/edit", (req, res) => {
         return;
       }
       const data = result[0];
-      if (data.author != author && data.dated != dated) {
-        res.send("Entred author & date is wrong")
-      } else if (data.author != author) {
+      if (data.author != author) {
         res.send("Entred author name is wrong")
-      } else if (data.dated != dated) {
-        res.send("Entred date is wrong")
-      }
+      } 
       res.render("edit.ejs", {data})
     })
   } catch (error) {
     console.log("some error occurred here", error);
   }
+})
+
+app.post("/posted", (req, res) => {
+  const id = uuidv4();
+  const currentDate = new Date();
+  const year = currentDate.getFullYear();
+  let month = currentDate.getMonth() + 1;
+  let day = currentDate.getDate();
+  month = month < 10 ? '0' + month : month;
+  day = day < 10 ? '0' + day : day;
+  const date = `${year}-${month}-${day}`;
+  const { author, heading, article, article_topic, image_url, image_alt, content } = req.body;
+  const q = `INSERT INTO blog_articles (id, author, dated, heading, article, article_topic, image_url, image_alt, content) VALUES (?, ?, ?, ?,?, ?, ?, ?, ?)`
+
+  connection.query(q, [id, author, date, heading, article, article_topic, image_url, image_alt, content], (err, result) => {
+    if (err) {
+      console.error("Error executing the querry", err);
+      res.send(500).json({ message: "Internal server error" });
+      return;
+    }
+    res.render("posted.ejs")
+  })
+})
+
+app.get("/create-post", (req, res) => {
+  res.render("create-post.ejs");
 })
 
 
