@@ -69,3 +69,8 @@ function viewContact() {
     viewMobileMenu();
   }
 }
+
+const contactForm = document.querySelector(".contactForm");
+contactForm.addEventListener("submit", () => {
+  form.reset();
+})

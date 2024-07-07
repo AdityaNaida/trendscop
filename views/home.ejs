@@ -95,28 +95,28 @@
         </p>
         <div class="pt-10 pb-5 w-full flex flex-wrap sm:flex-nowrap gap-10">
           <form
-            action=""
+            action="/submitted"
             method="POST"
-            class="w-full sm:w-1/2 flex flex-col gap-5"
+            class="w-full sm:w-1/2 flex flex-col gap-5 contactForm"
           >
             <div class="grid grid-cols-2 gap-6">
               <div class="flex flex-col gap-2">
-                <label for="first-name">First Name</label>
+                <label for="firstName">First Name</label>
                 <input
                   type="text"
-                  id="first-name"
-                  name="first-name"
+                  id="firstName"
+                  name="firstName"
                   required
                   placeholder="First name"
                   class="p-2 border-[1px] border-gray-600 rounded-md"
                 />
               </div>
               <div class="flex flex-col gap-2">
-                <label for="last-name">Last Name</label>
+                <label for="lastName">Last Name</label>
                 <input
                   type="text"
-                  id="last-name"
-                  name="last-name"
+                  id="lastName"
+                  name="lastName"
                   required
                   placeholder="Last name"
                   class="p-2 border-[1px] border-gray-600 rounded-md"
@@ -124,22 +124,22 @@
               </div>
             </div>
             <div class="flex flex-col gap-2 w-full">
-              <label for="user-email">Email</label>
+              <label for="userEmail">Email</label>
               <input
                 type="email"
-                id="user-email"
-                name="user-email"
+                id="userEmail"
+                name="userEmail"
                 required
                 placeholder="you@company.com"
                 class="p-2 border-[1px] border-gray-600 rounded-md"
               />
             </div>
             <div class="flex flex-col gap-2 w-full">
-              <label for="user-number">Phone number</label>
+              <label for="userNumber">Phone number</label>
               <input
                 type="tel"
-                id="user-number"
-                name="user-number"
+                id="userNumber"
+                name="userNumber"
                 minlength="10"
                 maxlength="10"
                 required
@@ -148,10 +148,10 @@
               />
             </div>
             <div class="flex flex-col gap-2 w-full">
-              <label for="user-message">Message</label>
+              <label for="userMessage">Message</label>
               <textarea
-                name="user-message"
-                id="user-message"
+                name="userMessage"
+                id="userMessage"
                 placeholder="Leave us a message..."
                 class="p-2 border-[1px] border-gray-600 rounded-md"
               ></textarea>

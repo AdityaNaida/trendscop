@@ -102,6 +102,21 @@ app.get("/blog/:id", (req, res) => {
   }
 });
 
+app.post("/submitted", (req, res) => {
+  const { firstName, lastName, userEmail, userNumber, userMessage } = req.body;
+  const id = uuidv4();
+  const q = `INSERT INTO contact (id, firstName, lastName, email, phoneNumber, message) VALUES (?, ?, ?, ?, ?, ?)`
+  connection.query(q, [id, firstName, lastName, userEmail, userNumber, userMessage], (err, result) => {
+    if (err) { 
+      console.error("Error executing the querry", err);
+      res.send(500).json({ message: "Internal server error" });
+      return;
+    }
+    console.log(result);
+   res.render("submitted.ejs")
+  })
+})
+
 app.listen(port, () => {
   console.log(`Listening at ${port}`);
 });
