@@ -102,6 +102,21 @@ app.get("/blog/:id", (req, res) => {
   }
 });
 
+app.patch("/blog/:id", (req, res) => {
+  const { id } = req.params;
+  const { heading, article, image, content} = req.body;
+  const q = `UPDATE blog_articles SET heading = ?, article = ?, image_url = ?, content = ? WHERE id = ?`;
+  connection.query(q, [heading, article, image, content, id], (err, result) => {
+    if (err) {
+      console.error("Error executing query:", err);
+      res.status(500).json({ message: "Internal server error" });
+      return;
+    }
+    console.log(result);
+    res.redirect(`/blog/${id}`);
+  })
+})
+
 app.post("/submitted", (req, res) => {
   const { firstName, lastName, userEmail, userNumber, userMessage } = req.body;
   const id = uuidv4();
@@ -115,6 +130,49 @@ app.post("/submitted", (req, res) => {
     console.log(result);
    res.render("submitted.ejs")
   })
+})
+
+app.get("/blog/:id/verify", (req, res) => {
+  const { id } = req.params;
+  const q = `SELECT * FROM  blog_articles WHERE id = ?`;
+  try {
+    connection.query(q, id, (err, result) => {
+      if (err) {
+        console.error("Error executing the querry", err)
+        res.send(500).json({ message: "Internal server error" });
+        return;
+      }
+      const data = result[0];
+      res.render("verify.ejs", {data})
+    })
+  } catch (err) {
+    console.log("Some error occured", err);
+  }
+})
+
+app.post("/blog/:id/edit", (req, res) => {
+  const { postId , dated, author } = req.body;
+  const q = `SELECT * FROM  blog_articles WHERE id = ?`;
+  try {
+    connection.query(q, postId, (err, result) => {
+      if (err) {
+        console.error("Error executing the querry", err);
+        res.send(500).json({ message: "Internal server error" });
+        return;
+      }
+      const data = result[0];
+      if (data.author != author && data.dated != dated) {
+        res.send("Entred author & date is wrong")
+      } else if (data.author != author) {
+        res.send("Entred author name is wrong")
+      } else if (data.dated != dated) {
+        res.send("Entred date is wrong")
+      }
+      res.render("edit.ejs", {data})
+    })
+  } catch (error) {
+    console.log("some error occurred here", error);
+  }
 })
 
 app.listen(port, () => {

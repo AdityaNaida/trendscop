@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit <%= data.heading%></title>
+    <link rel="stylesheet" href="/styles/output.css" />
+</head>
+<body>
+    <div class="h-auto w-screen flex flex-col gap-4 justify-center items-center">
+        <h2 class="font-semibold text-2xl mt-4">Edit Post</h2>
+        <form  method="post" action="/blog/<%=data.id%>?_method=PATCH" class="flex flex-col gap-4 w-3/4 sm:w-1/2">
+            <div class="flex flex-col gap-1">
+                <label for="heading">Heading</label>
+                <textarea name="heading" id="heading" class="bg-gray-100 border border-[rgba(0,0,0,0.2)] p-2 rounded-md" required><%=data.heading%></textarea>
+            </div>
+            <div class="flex flex-col gap-1">
+                <label for="article">Article</label>
+                <textarea name="article" id="article" class="bg-gray-100 border border-[rgba(0,0,0,0.2)] p-2 rounded-md" required><%=data.article%></textarea>
+            </div>
+            <div class="flex flex-col gap-1">
+                <label for="image">Image url</label>
+                <textarea name="image" id="image" class="bg-gray-100 border border-[rgba(0,0,0,0.2)] p-2 rounded-md" required><%=data.image_url%></textarea>
+            </div>
+            <div class="flex flex-col gap-1">
+                <label for="content">Content</label>
+                <textarea name="content" id="content" class="bg-gray-100 border border-[rgba(0,0,0,0.2)] p-2 rounded-md" required><%=data.content%></textarea>
+            </div>
+            <button class="text-lg text-white text-center p-4 rounded-md bg-black w-full md:w-1/2 mx-auto my-2">Save Changes</button>
+        </form>
+    </div>
+</body>
+</html>

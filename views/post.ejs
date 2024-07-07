@@ -9,6 +9,10 @@
         <img src="/icons/user.webp" alt="author image" class="h-8 w-8 opacity-50" height="25" width="25" decoding="async" loading="lazy">
         <p class="font-semibold text-lg mr-3"><%= data.author%></p>
         <p class="text-gray-500 text-sm"><%= data.dated %></p>
+        <form action="/blog/<%=data.id%>/verify" method="get">
+            <button class="py-1 px-4 bg-black text-white rounded-md ml-4">Edit</button>
+        </form>
+
     </div>
     <div class="my-4">
         <img src="<%= data.image_url %>" alt="<%= data.image_alt %>" height="100" width="200" decoding="async" loading="lazy" class="block m-auto h-auto w-full sm:w-1/2 rounded-md">
