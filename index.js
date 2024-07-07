@@ -70,7 +70,7 @@ app.post("/", (req, res) => {
     }
 
     if (result.length > 0) {
-      res.send("Email already exists");
+      res.render("existed-subscription.ejs")
     } else {
       const insertionQuery =
         "INSERT INTO subscriber (subscribed_users) VALUES (?)";
@@ -80,7 +80,7 @@ app.post("/", (req, res) => {
           res.status(500).json({ message: "Internal server error" });
           return;
         }
-        res.send("Subscribed");
+        res.render("subscribed.ejs");
       });
     }
   });

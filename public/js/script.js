@@ -12,37 +12,37 @@ function viewMobileMenu() {
 }
 
 //Submit Subscribe button
-const form = document.getElementById("subscribeForm");
-form.addEventListener("submit", (event) => {
-  // event.preventDefault(); // Prevent default form submission
+// const form = document.getElementById("subscribeForm");
+// form.addEventListener("submit", (event) => {
+//   event.preventDefault(); // Prevent default form submission
 
-  const formData = new FormData(form);
-  const email = formData.get("email");
+//   const formData = new FormData(form);
+//   const email = formData.get("email");
 
-  fetch("/", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-      form.reset();
-      showMessage(data.message); // Show the message to the user
-    })
-    .catch((error) => console.error("Error:", error));
-});
+//   fetch("/", {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({ email }),
+//   })
+//     .then((response) => response.json())
+//     .then((data) => {
+//       console.log(data);
+//       form.reset();
+//       showMessage(data.message);
+//     })
+//     .catch((error) => console.error("Error:", error));
+// });
 
-function showMessage(message) {
-  const messageDiv = document.getElementById("message");
-  messageDiv.innerText = message;
-  messageDiv.style.display = "block";
-  setTimeout(() => {
-    messageDiv.style.display = "none";
-  }, 500); // Show message for 500ms
-}
+// function showMessage(message) {
+//   const messageDiv = document.getElementById("message");
+//   messageDiv.innerText = message;
+//   messageDiv.style.display = "block";
+//   setTimeout(() => {
+//     messageDiv.style.display = "none";
+//   }, 500); 
+// }
 
 //view blogs
 const hero = document.querySelector(".hero");
