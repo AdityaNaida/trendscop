@@ -117,6 +117,33 @@ app.patch("/blog/:id", (req, res) => {
   })
 })
 
+app.get("/blog/:id/confirm-delete", (req, res) => {
+  const { id } = req.params;
+  const q = `SELECT * FROM blog_articles WHERE id = ?`;
+  connection.query(q, [id], (err, result) => {
+    if (err) {
+      console.error("Error executing query:", err);
+      res.status(500).json({ message: "Internal server error" });
+      return;
+    }
+    const data = result[0];
+    res.render("confirm-delete.ejs", {data})
+  })
+})
+
+app.delete("/blog/:id", (req, res) => {
+  const { id } = req.params;
+  const q = `DELETE FROM blog_articles WHERE id = ?`;
+  connection.query(q, [id], (err, result) => {
+    if (err) {
+      console.error("Error executing query:", err);
+      res.status(500).json({ message: "Internal server error" });
+      return;
+    }
+    res.redirect("/");
+  })
+})
+
 app.post("/submitted", (req, res) => {
   const { firstName, lastName, userEmail, userNumber, userMessage } = req.body;
   const id = uuidv4();
@@ -174,6 +201,8 @@ app.post("/blog/:id/edit", (req, res) => {
     console.log("some error occurred here", error);
   }
 })
+
+
 
 app.listen(port, () => {
   console.log(`Listening at ${port}`);
