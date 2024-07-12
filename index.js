@@ -1,5 +1,5 @@
 //Database
-const mysql = require("mysql2");
+const mysql = require("mysql2/promise");
 //require method override
 const methodOverride = require("method-override");
 // for environment variables
@@ -14,8 +14,7 @@ const { v4: uuidv4 } = require("uuid");
 //bodyparser
 const bodyParser = require("body-parser");
 // marked down the blog article
-
-const { marked } = require('marked');
+const { marked } = require("marked");
 
 //Loading environment variables from .env file
 dotenv.config();
@@ -31,198 +30,226 @@ app.use(methodOverride("_method"));
 //decode the req body from the url
 app.use(bodyParser.urlencoded({ extended: true }));
 
-//Building the connection with Database
-const connection = mysql.createConnection({
+//Building the connection pool with Database
+const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   database: process.env.DB_NAME,
   password: process.env.DB_PASS,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
 });
 
-try {
-  connection.connect((err) => {
-    if (err) throw err;
-    console.log("Connected to the Database");
-  });
-} catch (err) {
-  console.log(err);
-  console.log("Some error occurred while connecting to the database!");
+// Function to query the database
+async function queryDatabase(query, values) {
+  const connection = await pool.getConnection();
+  try {
+    const [results] = await connection.query(query, values);
+    return results;
+  } finally {
+    connection.release();
+  }
 }
 
-app.get("/", (req, res) => {
-  const q = "SELECT * FROM blog_articles";
-  connection.query(q, (err, result) => {
-    if (err) throw err;
-    const data = result;
-    res.render("home.ejs", { data });
-  });
-});
-
-app.post("/", (req, res) => {
-  const { email } = req.body;
-  const query = "SELECT * FROM subscriber WHERE subscribed_users = ?";
-
-  connection.query(query, [email], (err, result) => {
-    if (err) {
-      console.error("Error executing query:", err);
-      res.status(500).json({ message: "Internal server error" });
-      return;
-    }
-
-    if (result.length > 0) {
-      res.render("existed-subscription.ejs")
-    } else {
-      const insertionQuery =
-        "INSERT INTO subscriber (subscribed_users) VALUES (?)";
-      connection.query(insertionQuery, [email], (err, result) => {
-        if (err) {
-          console.error("Error executing insertion query:", err);
-          res.status(500).json({ message: "Internal server error" });
-          return;
-        }
-        res.render("subscribed.ejs");
-      });
-    }
-  });
-});
-
-app.get("/blog/:id", (req, res) => {
-  const { id } = req.params;
-  const p = `SELECT * FROM blog_articles WHERE id = ?`;
+// Routes
+app.get("/", async (req, res) => {
   try {
-    connection.query(p, [id], (err, result) => {
-      if (err) throw err;
+    const data = await queryDatabase("SELECT * FROM blog_articles");
+    res.render("home.ejs", { data });
+  } catch (err) {
+    console.error("Error executing query:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+app.post("/", async (req, res) => {
+  const { email } = req.body;
+  try {
+    const result = await queryDatabase(
+      "SELECT * FROM subscriber WHERE subscribed_users = ?",
+      [email]
+    );
+    if (result.length > 0) {
+      res.render("existed-subscription.ejs");
+    } else {
+      await queryDatabase(
+        "INSERT INTO subscriber (subscribed_users) VALUES (?)",
+        [email]
+      );
+      res.render("subscribed.ejs");
+    }
+  } catch (err) {
+    console.error("Error executing query:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+app.get("/blog/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await queryDatabase(
+      "SELECT * FROM blog_articles WHERE id = ?",
+      [id]
+    );
+    if (result.length > 0) {
       const data = result[0];
       data.content = marked.parse(data.content);
-      res.render("post.ejs", { data: data });
-    });
+      res.render("post.ejs", { data });
+    } else {
+      res.status(404).json({ message: "Article not found" });
+    }
   } catch (err) {
-    console.log(err);
-    res.send("Some error occurred in fetching from the database");
+    console.error("Error executing query:", err);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 
-app.patch("/blog/:id", (req, res) => {
+app.patch("/blog/:id", async (req, res) => {
   const { id } = req.params;
-  const { heading, article, image, content} = req.body;
-  const q = `UPDATE blog_articles SET heading = ?, article = ?, image_url = ?, content = ? WHERE id = ?`;
-  connection.query(q, [heading, article, image, content, id], (err, result) => {
-    if (err) {
-      console.error("Error executing query:", err);
-      res.status(500).json({ message: "Internal server error" });
-      return;
-    }
+  const { heading, article, image, content } = req.body;
+  try {
+    await queryDatabase(
+      "UPDATE blog_articles SET heading = ?, article = ?, image_url = ?, content = ? WHERE id = ?",
+      [heading, article, image, content, id]
+    );
     res.redirect(`/blog/${id}`);
-  })
-})
+  } catch (err) {
+    console.error("Error executing query:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
 
-app.get("/blog/:id/confirm-delete", (req, res) => {
+app.get("/blog/:id/confirm-delete", async (req, res) => {
   const { id } = req.params;
-  const q = `SELECT * FROM blog_articles WHERE id = ?`;
-  connection.query(q, [id], (err, result) => {
-    if (err) {
-      console.error("Error executing query:", err);
-      res.status(500).json({ message: "Internal server error" });
-      return;
+  try {
+    const result = await queryDatabase(
+      "SELECT * FROM blog_articles WHERE id = ?",
+      [id]
+    );
+    if (result.length > 0) {
+      const data = result[0];
+      res.render("confirm-delete.ejs", { data });
+    } else {
+      res.status(404).json({ message: "Article not found" });
     }
-    const data = result[0];
-    res.render("confirm-delete.ejs", {data})
-  })
-})
+  } catch (err) {
+    console.error("Error executing query:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
 
-app.delete("/blog/:id", (req, res) => {
+app.delete("/blog/:id", async (req, res) => {
   const { id } = req.params;
-  const q = `DELETE FROM blog_articles WHERE id = ?`;
-  connection.query(q, [id], (err, result) => {
-    if (err) {
-      console.error("Error executing query:", err);
-      res.status(500).json({ message: "Internal server error" });
-      return;
-    }
+  try {
+    await queryDatabase("DELETE FROM blog_articles WHERE id = ?", [id]);
     res.redirect("/");
-  })
-})
+  } catch (err) {
+    console.error("Error executing query:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
 
-app.post("/submitted", (req, res) => {
+app.post("/submitted", async (req, res) => {
   const { firstName, lastName, userEmail, userNumber, userMessage } = req.body;
   const id = uuidv4();
-  const q = `INSERT INTO contact (id, firstName, lastName, email, phoneNumber, message) VALUES (?, ?, ?, ?, ?, ?)`
-  connection.query(q, [id, firstName, lastName, userEmail, userNumber, userMessage], (err, result) => {
-    if (err) { 
-      console.error("Error executing the querry", err);
-      res.send(500).json({ message: "Internal server error" });
-      return;
-    }
-   res.render("submitted.ejs")
-  })
-})
-
-app.get("/blog/:id/verify", (req, res) => {
-  const { id } = req.params;
-  const q = `SELECT * FROM  blog_articles WHERE id = ?`;
   try {
-    connection.query(q, id, (err, result) => {
-      if (err) {
-        console.error("Error executing the querry", err)
-        res.send(500).json({ message: "Internal server error" });
-        return;
-      }
-      const data = result[0];
-      res.render("verify.ejs", {data})
-    })
+    await queryDatabase(
+      "INSERT INTO contact (id, firstName, lastName, email, phoneNumber, message) VALUES (?, ?, ?, ?, ?, ?)",
+      [id, firstName, lastName, userEmail, userNumber, userMessage]
+    );
+    res.render("submitted.ejs");
   } catch (err) {
-    console.log("Some error occured", err);
+    console.error("Error executing query:", err);
+    res.status(500).json({ message: "Internal server error" });
   }
-})
+});
 
-app.post("/blog/:id/edit", (req, res) => {
-  const { postId , author } = req.body;
-  const q = `SELECT * FROM  blog_articles WHERE id = ?`;
+app.get("/blog/:id/verify", async (req, res) => {
+  const { id } = req.params;
   try {
-    connection.query(q, postId, (err, result) => {
-      if (err) {
-        console.error("Error executing the querry", err);
-        res.send(500).json({ message: "Internal server error" });
-        return;
-      }
+    const result = await queryDatabase(
+      "SELECT * FROM blog_articles WHERE id = ?",
+      [id]
+    );
+    if (result.length > 0) {
       const data = result[0];
-      if (data.author != author) {
-        res.send("Entred author name is wrong")
-      } 
-      res.render("edit.ejs", {data})
-    })
-  } catch (error) {
-    console.log("some error occurred here", error);
+      res.render("verify.ejs", { data });
+    } else {
+      res.status(404).json({ message: "Article not found" });
+    }
+  } catch (err) {
+    console.error("Error executing query:", err);
+    res.status(500).json({ message: "Internal server error" });
   }
-})
+});
 
-app.post("/posted", (req, res) => {
+app.post("/blog/:id/edit", async (req, res) => {
+  const { postId, author } = req.body;
+  try {
+    const result = await queryDatabase(
+      "SELECT * FROM blog_articles WHERE id = ?",
+      [postId]
+    );
+    if (result.length > 0) {
+      const data = result[0];
+      if (data.author !== author) {
+        res.send("Entered author name is wrong");
+      } else {
+        res.render("edit.ejs", { data });
+      }
+    } else {
+      res.status(404).json({ message: "Article not found" });
+    }
+  } catch (err) {
+    console.error("Error executing query:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+app.post("/posted", async (req, res) => {
   const id = uuidv4();
   const currentDate = new Date();
   const year = currentDate.getFullYear();
   let month = currentDate.getMonth() + 1;
   let day = currentDate.getDate();
-  month = month < 10 ? '0' + month : month;
-  day = day < 10 ? '0' + day : day;
+  month = month < 10 ? "0" + month : month;
+  day = day < 10 ? "0" + day : day;
   const date = `${year}-${month}-${day}`;
-  const { author, heading, article, article_topic, image_url, image_alt, content } = req.body;
-  const q = `INSERT INTO blog_articles (id, author, dated, heading, article, article_topic, image_url, image_alt, content) VALUES (?, ?, ?, ?,?, ?, ?, ?, ?)`
-
-  connection.query(q, [id, author, date, heading, article, article_topic, image_url, image_alt, content], (err, result) => {
-    if (err) {
-      console.error("Error executing the querry", err);
-      res.send(500).json({ message: "Internal server error" });
-      return;
-    }
-    res.render("posted.ejs")
-  })
-})
+  const {
+    author,
+    heading,
+    article,
+    article_topic,
+    image_url,
+    image_alt,
+    content,
+  } = req.body;
+  try {
+    await queryDatabase(
+      "INSERT INTO blog_articles (id, author, dated, heading, article, article_topic, image_url, image_alt, content) VALUES (?, ?, ?, ?,?, ?, ?, ?, ?)",
+      [
+        id,
+        author,
+        date,
+        heading,
+        article,
+        article_topic,
+        image_url,
+        image_alt,
+        content,
+      ]
+    );
+    res.render("posted.ejs");
+  } catch (err) {
+    console.error("Error executing query:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
 
 app.get("/create-post", (req, res) => {
   res.render("create-post.ejs");
-})
-
-
+});
 
 app.listen(port, () => {
   console.log(`Listening at ${port}`);
