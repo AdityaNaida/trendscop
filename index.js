@@ -24,7 +24,7 @@ app.set("view engine", "ejs");
 //setting the frontend view
 app.set("views", path.join(__dirname, "/views"));
 //static file location
-app.use(express.static("public"));
+app.use(express.static(__dirname, "/public"));
 //for overriding html form methods
 app.use(methodOverride("_method"));
 //decode the req body from the url
