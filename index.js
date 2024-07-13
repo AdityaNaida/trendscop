@@ -144,13 +144,11 @@ app.delete("/blog/:id", async (req, res) => {
   const { adminPassword } = req.body;
   const actualPassword = "Aditya@#04";
   try {
-    // await queryDatabase("DELETE FROM blog_articles WHERE id = ?", [id]);
     if (adminPassword === actualPassword) {
-      console.log(true);
-      res.redirect("/");
+      await queryDatabase("DELETE FROM blog_articles WHERE id = ?", [id]);
+      res.redirect("/post-deleted");
     } else {
       res.redirect("/wrong-password");
-      console.log(false);
     }
   } catch (err) {
     console.error("Error executing query:", err);
@@ -261,6 +259,10 @@ app.get("/create-post", (req, res) => {
 
 app.get("/wrong-password", (req, res) => {
   res.render("wrong-password.ejs");
+});
+
+app.get("/post-deleted", (req, res) => {
+  res.render("post-deleted.ejs");
 });
 
 app.listen(port, () => {
