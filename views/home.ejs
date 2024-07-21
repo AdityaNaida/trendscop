@@ -33,9 +33,10 @@
       <section class="blogs">
         <div class="flex justify-between items-center">
           <h2 class="text-2xl font-bold">All blog posts</h2>
-          <form action="/create-post" method="get">
+          <a href="/create-post" class="py-2 px-4 bg-black text-white rounded-md ">Create Post</a>
+          <!-- <form action="/create-post" method="get">
             <button class="py-2 px-4 bg-black text-white rounded-md ">Create Post</button>
-          </form>
+          </form> -->
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 py-4">
           <% for(user of data) {%>
@@ -74,13 +75,17 @@
               >
                 <%= user.article %>
               </p>
-              <form action="/blog/<%=user.id%>" method="get">
+              <a href="/blog/<%=user.id%>" class="inline-block mt-2 bg-black text-white px-3 py-1.5 rounded-md ease-in-out transition-all" >
+                Read More
+              </a>
+              <br>
+              <!-- <form action="/blog/<%=user.id%>" method="get">
                 <button
                   class="mt-2 bg-black text-white px-3 py-1.5 rounded-md ease-in-out transition-all"
                 >
                   Read More
                 </button>
-              </form>
+              </form> -->
               <span
                 class="inline-block mt-2 border-[1px] border-black px-2 py-0 rounded-md text-sm"
                 ><%= user.article_topic %></span

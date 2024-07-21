@@ -1130,6 +1130,10 @@ body {
 }
 
 @media (min-width: 768px) {
+  .md\:mt-4 {
+    margin-top: 1rem;
+  }
+
   .md\:w-1\/2 {
     width: 50%;
   }

@@ -12,12 +12,14 @@
        
     </div>
     <div class="flex items-center my-3 gap-2">
-        <form action="/blog/<%=data.id%>/verify" method="get">
+        <a href="/blog/<%=data.id%>/verify" class="py-1 px-4 bg-black text-white rounded-md ">Edit</a>
+        <!-- <form action="" method="get">
             <button class="py-1 px-4 bg-black text-white rounded-md ">Edit</button>
-        </form>
-        <form action="/blog/<%=data.id%>/confirm-delete" method="get">
+        </form> -->
+        <a href="/blog/<%=data.id%>/confirm-delete" class="py-1 px-4 bg-red-500 text-white rounded-md ">Delete</a>
+        <!-- <form action="/blog/<%=data.id%>/confirm-delete" method="get">
             <button class="py-1 px-4 bg-red-500 text-white rounded-md ">Delete</button>
-        </form>
+        </form> -->
     </div>
     <div class="my-4">
         <img src="<%= data.image_url %>" alt="<%= data.image_alt %>" height="100" width="200" decoding="async" loading="lazy" class="block m-auto h-auto w-full sm:w-1/2 rounded-md">
